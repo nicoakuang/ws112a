@@ -24,8 +24,6 @@
     ctx.response.body = await render.signUpForm();
   }
 
-  // ...
-
 async function signUp(ctx) {
   const body = ctx.request.body();
   if (body.type === "form") {
