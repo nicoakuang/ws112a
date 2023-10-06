@@ -45,6 +45,15 @@ export function signInSuccess() {
   );
 }
 
+export function signUpFailure() {
+  return layout('',
+    `
+    <h1>Sign In Failure</h1>
+    <p>Username already Taken. Please <a href="/signup">try another</a>.</p>
+    `
+  );
+}
+
 export function signInFailure() {
   return layout('',
     `
@@ -53,6 +62,7 @@ export function signInFailure() {
     `
   );
 }
+
 
 export function signUpSuccess() {
   return layout('',

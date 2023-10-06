@@ -3,7 +3,6 @@
   import * as render from './Renders.js';
 
   const users = []; // Array untuk menyimpan data pengguna yang mendaftar
-
   const router = new Router();
 
   router
@@ -25,22 +24,34 @@
     ctx.response.body = await render.signUpForm();
   }
 
-  async function signUp(ctx) {
-    const body = ctx.request.body();
-    if (body.type === "form") {
-      const pairs = await body.value;
-      const user = {};
-      for (const [key, value] of pairs) {
-        user[key] = value;
-      }
+  // ...
+
+async function signUp(ctx) {
+  const body = ctx.request.body();
+  if (body.type === "form") {
+    const pairs = await body.value;
+    const user = {};
+    for (const [key, value] of pairs) {
+      user[key] = value;
+    }
+
+    // Periksa apakah username telah digunakan sebelumnya
+    const isUsernameTaken = users.some(existingUser => existingUser.name === user.name);
+
+    if (isUsernameTaken) {
+      // Jika username telah digunakan, kirim pesan kesalahan
+      ctx.response.body = await render.signUpFailure();
       
+      
+    } else {
       users.push(user);
-      ctx.response.body = await render.signUpSuccess(); // Menampilkan pesan sukses saat berhasil mendaftar
+      ctx.response.body = await render.signUpSuccess();
 
       // Setelah SignUp berhasil, arahkan ke halaman SignIn
       ctx.response.redirect('/signin');
     }
   }
+}
 
   async function showSignInForm(ctx) {
     ctx.response.body = await render.signInForm();
