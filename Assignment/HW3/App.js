@@ -1,4 +1,4 @@
-// app.js
+// App.js
 import { Application, Router } from "https://deno.land/x/oak/mod.ts";
 import * as render from './Render.js'
 //by github.com/nicoakuang
