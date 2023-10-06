@@ -47,7 +47,6 @@ export function signInSuccess() {
 
 export function signInFailure() {
   return layout('',
-    "Sign In Failure",
     `
     <h1>Sign In Failure</h1>
     <p>Invalid username or password. Please <a href="/signin">try again</a>.</p>
