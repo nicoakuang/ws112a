@@ -39,7 +39,7 @@ export function signInSuccess() {
   return layout('',
     `
     <h1>Sign In Success</h1>
-    <p>You have successfully signed in.</p>
+    <p>You have successfully signed.</p>
     <p><a href="/">Go to Home</a></p>
     `
   );
