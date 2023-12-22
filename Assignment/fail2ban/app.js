@@ -1,34 +1,41 @@
+// Import necessary modules
 import { Application, Router } from "https://deno.land/x/oak/mod.ts";
-import * as render from './render.js'
+import * as render from './render.js'; // Import render module
 import { DB } from "https://deno.land/x/sqlite/mod.ts";
 import { Session } from "https://deno.land/x/oak_sessions/mod.ts";
 
+// Create SQLite database and define tables
 const db = new DB("blog.db");
 db.query("CREATE TABLE IF NOT EXISTS posts (id INTEGER PRIMARY KEY AUTOINCREMENT, username TEXT, title TEXT, body TEXT)");
 db.query("CREATE TABLE IF NOT EXISTS users (id INTEGER PRIMARY KEY AUTOINCREMENT, username TEXT, password TEXT, email TEXT)");
 
+// Create an instance of the Oak router
 const router = new Router();
 
+// Define routes for the application
 router
-  .get('/', list)
-  .get('/signup', signupUi)
-  .post('/signup', signup)
-  .post('/login', login)  
-  .get('/login', loginUi)
-  .get('/logout', logout)
-  .get('/post/new', add)
-  .get('/post/:id', show)
-  .post('/post', create);
-  
-const app = new Application()
-app.use(Session.initMiddleware())
-app.use(router.routes());
-app.use(router.allowedMethods());
+  .get('/', list)         // Route to list posts
+  .get('/signup', signupUi) // Route to display signup UI
+  .post('/signup', signup)  // Route to handle signup
+  .post('/login', login)    // Route to handle login
+  .get('/login', loginUi)   // Route to display login UI
+  .get('/logout', logout)   // Route to handle logout
+  .get('/post/new', add)    // Route to display new post form
+  .get('/post/:id', show)   // Route to display a specific post
+  .post('/post', create);   // Route to handle post creation
 
+// Create an instance of the Oak application
+const app = new Application()
+app.use(Session.initMiddleware()) // Initialize session middleware
+app.use(router.routes());          // Use the defined routes
+app.use(router.allowedMethods());  // Use allowed methods
+
+// Function to block an IP address
 function blockIP(ip) {
   fail2ban.blockIP(ip);
 }
 
+// Function to execute SQL commands
 function sqlcmd(sql, arg1) {
   console.log('sql:', sql)
   try {
@@ -41,6 +48,7 @@ function sqlcmd(sql, arg1) {
   }
 }
 
+// Function to query posts from the database
 function postQuery(sql) {
   let list = []
   for (const [id, username, title, body] of sqlcmd(sql)) {
@@ -50,6 +58,7 @@ function postQuery(sql) {
   return list
 }
 
+// Function to query users from the database
 function userQuery(sql) {
   let list = []
   for (const [id, username, password, email] of sqlcmd(sql)) {
@@ -59,6 +68,7 @@ function userQuery(sql) {
   return list
 }
 
+// Function to parse form data
 async function parseFormBody(body) {
   const pairs = await body.value
   const obj = {}
@@ -68,6 +78,7 @@ async function parseFormBody(body) {
   return obj
 }
 
+// Route handling functions
 async function signupUi(ctx) {
   ctx.response.body = render.signupUi();
 }
@@ -135,49 +146,74 @@ async function login(ctx) {
 }
 
 
+// Route handling function for user logout
 async function logout(ctx) {
-   ctx.state.session.set('user', null)
-   ctx.response.redirect('/')
+  // Clear the 'user' key in the session, effectively logging the user out
+  ctx.state.session.set('user', null);
+  // Redirect to the home page after logout
+  ctx.response.redirect('/');
 }
 
+// Route handling function to list posts
 async function list(ctx) {
-  let posts = postQuery("SELECT id, username, title, body FROM posts")
-  console.log('list:posts=', posts)
-  ctx.response.body = await render.list(posts, await ctx.state.session.get('user'));
+ // Query all posts from the database
+ let posts = postQuery("SELECT id, username, title, body FROM posts");
+ console.log('list:posts=', posts);
+ // Render the list view, passing the posts and user information from the session
+ ctx.response.body = await render.list(posts, await ctx.state.session.get('user'));
 }
 
+// Route handling function to display new post form
 async function add(ctx) {
-  var user = await ctx.state.session.get('user')
-  if (user != null) {
-    ctx.response.body = await render.newPost();
-  } else {
-    ctx.response.body = render.fail()
-  }
+ // Get the user from the session
+ var user = await ctx.state.session.get('user');
+ // Check if the user is logged in
+ if (user != null) {
+   // Render the new post form
+   ctx.response.body = await render.newPost();
+ } else {
+   // Render a failure message if the user is not logged in
+   ctx.response.body = render.fail();
+ }
 }
 
+// Route handling function to display a specific post
 async function show(ctx) {
-  const pid = ctx.params.id;
-  let posts = postQuery(`SELECT id, username, title, body FROM posts WHERE id=${pid}`)
-  let post = posts[0]
-  console.log('show:post=', post)
-  if (!post) ctx.throw(404, 'invalid post id');
-  ctx.response.body = await render.show(post);
+ // Get the post ID from the route parameters
+ const pid = ctx.params.id;
+ // Query a specific post from the database based on the ID
+ let posts = postQuery(`SELECT id, username, title, body FROM posts WHERE id=${pid}`);
+ let post = posts[0];
+ console.log('show:post=', post);
+ // Throw a 404 error if the post is not found
+ if (!post) ctx.throw(404, 'invalid post id');
+ // Render the view for the specific post
+ ctx.response.body = await render.show(post);
 }
 
+// Route handling function to create a new post
 async function create(ctx) {
-  const body = ctx.request.body()
-  if (body.type === "form") {
-    var post = await parseFormBody(body)
-    console.log('create:post=', post)
-    var user = await ctx.state.session.get('user')
-    if (user != null) {
-      console.log('user=', user)
-      sqlcmd("INSERT INTO posts (username, title, body) VALUES (?, ?, ?)", [user.username, post.title, post.body]);  
-    } else {
-      ctx.throw(404, 'not login yet!');
-    }
-    ctx.response.redirect('/');
-  }
+ // Get the request body
+ const body = ctx.request.body();
+ // Check if the request type is a form submission
+ if (body.type === "form") {
+   // Parse form data to get post details
+   var post = await parseFormBody(body);
+   console.log('create:post=', post);
+   // Get the user from the session
+   var user = await ctx.state.session.get('user');
+   // Check if the user is logged in
+   if (user != null) {
+     console.log('user=', user);
+     // Insert the new post into the database
+     sqlcmd("INSERT INTO posts (username, title, body) VALUES (?, ?, ?)", [user.username, post.title, post.body]);
+   } else {
+     // Throw a 404 error if the user is not logged in
+     ctx.throw(404, 'not login yet!');
+   }
+   // Redirect to the home page after post creation
+   ctx.response.redirect('/');
+ }
 }
 
 console.log('Server run at http://127.0.0.1:8000')
