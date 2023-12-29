@@ -80,7 +80,7 @@ async function create(ctx) {
     // Parse the JSON body
     let post = await body.value;
     // Set the id to null, allowing the database to auto-increment the id
-    post.id = null;
+    post.id = post.length
     // Insert the new post into the database
     db.query("INSERT INTO posts (title, body) VALUES (?, ?)", [post.title, post.body]);
     // Send a success response
