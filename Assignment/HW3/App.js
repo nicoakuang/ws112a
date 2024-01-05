@@ -31,12 +31,12 @@ app.use(router.allowedMethods());
 
 // List all posts
 async function list(ctx) {
-  ctx.response.body = await render.list(posts);
+  ctx.response.body = render.list(posts);
 }
 
 // Display the form for adding a new post
 async function add(ctx) {
-  ctx.response.body = await render.newPost();
+  ctx.response.body = render.newPost();
 }
 
 // Display a specific post
@@ -44,12 +44,12 @@ async function show(ctx) {
   const id = ctx.params.id;
   const post = posts[id];
   if (!post) ctx.throw(404, 'Invalid post id');
-  ctx.response.body = await render.show(post);
+  ctx.response.body = render.show(post);
 }
 
 // Display the search form
 async function search(ctx) {
-  ctx.response.body = await render.search();
+  ctx.response.body = render.search();
 }
 
 // Search for a post based on the submitted form data
@@ -67,9 +67,9 @@ async function find(ctx) {
         if (i.title == name[1])
           number = i.body;
       }
-      ctx.response.body = await render.found(name[1], number);
+      ctx.response.body = render.found(name[1], number);
     } else {
-      ctx.response.body = await render.not_found();
+      ctx.response.body = render.not_found();
     }
   }
 }
