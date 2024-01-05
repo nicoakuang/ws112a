@@ -42,5 +42,7 @@ Source: https://github.com/nicoakuang/ws112a/tree/master/Assignment/HW5
 
 #Assignment 7 Success
 
+Link below:
+Source: https://github.com/nicoakuang/ws112a/tree/master/Assignment/HW7
 
 #Assignment 8 Success
