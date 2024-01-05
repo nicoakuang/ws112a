@@ -17,3 +17,11 @@ Source: https://github.com/nicoakuang/ws112a/blob/master/Assignment/HW1.js
 finish method, All assignments are completed after understanding the teacher's program and modifying the teacher's program into the homework requirements.
 Link below:
 Source: https://github.com/nicoakuang/ws112a/blob/master/Assignment/HW2.js
+
+
+#Assignment 3 Success
+finish method, All assignments are completed after understanding the teacher's program and modifying the teacher's program into the homework requirements.
+Link below:
+Source: https://github.com/nicoakuang/ws112a/blob/master/Assignment/HW3
+
+#Assignment 4 Success

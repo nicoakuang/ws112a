@@ -1,29 +1,39 @@
-  // Apps.js
-  import { Application, Router } from "https://deno.land/x/oak/mod.ts";
-  import * as render from './Renders.js';
+//by github.com/nicoakuang
 
-  const users = []; // Array untuk menyimpan data pengguna yang mendaftar
-  const router = new Router();
+// Import required modules
+import { Application, Router } from "https://deno.land/x/oak/mod.ts";
+import * as render from './Renders.js';
 
-  router
-    .get('/', home)
-    .get('/signup', showSignUpForm)
-    .post('/signup', signUp)
-    .get('/signin', showSignInForm)
-    .post('/signin', signIn);
+// Array to store registered user data
+const users = [];
+const router = new Router();
 
-  const app = new Application();
-  app.use(router.routes());
-  app.use(router.allowedMethods());
+// Define routes and their handlers
+router
+  .get('/', home)
+  .get('/signup', showSignUpForm)
+  .post('/signup', signUp)
+  .get('/signin', showSignInForm)
+  .post('/signin', signIn);
 
-  async function home(ctx) {
-    ctx.response.body = await render.home();
-  }
+// Create an application instance
+const app = new Application();
+app.use(router.routes());
+app.use(router.allowedMethods());
 
-  async function showSignUpForm(ctx) {
-    ctx.response.body = await render.signUpForm();
-  }
+// Route Handlers
 
+// Display the home page
+async function home(ctx) {
+  ctx.response.body = render.home();
+}
+
+// Display the sign-up form
+async function showSignUpForm(ctx) {
+  ctx.response.body = render.signUpForm();
+}
+
+// Handle the sign-up process
 async function signUp(ctx) {
   const body = ctx.request.body();
   if (body.type === "form") {
@@ -33,47 +43,50 @@ async function signUp(ctx) {
       user[key] = value;
     }
 
-    // Periksa apakah username telah digunakan sebelumnya
+    // Check if the username is already taken
     const isUsernameTaken = users.some(existingUser => existingUser.name === user.name);
 
     if (isUsernameTaken) {
-      // Jika username telah digunakan, kirim pesan kesalahan
-      ctx.response.body = await render.signUpFailure();
-      
-      
+      // If the username is taken, display an error message
+      ctx.response.body = render.signUpFailure();
     } else {
+      // If the username is available, add the user to the array and display success message
       users.push(user);
-      ctx.response.body = await render.signUpSuccess();
+      ctx.response.body = render.signUpSuccess();
 
-      // Setelah SignUp berhasil, arahkan ke halaman SignIn
+      // After successful sign-up, redirect to the sign-in page
       ctx.response.redirect('/signin');
     }
   }
 }
 
-  async function showSignInForm(ctx) {
-    ctx.response.body = await render.signInForm();
-  }
+// Display the sign-in form
+async function showSignInForm(ctx) {
+  ctx.response.body = render.signInForm();
+}
 
-  async function signIn(ctx) {
-    const body = ctx.request.body();
-    if (body.type === "form") {
-      const pairs = await body.value;
-      const inputUser = {};
-      for (const [key, value] of pairs) {
-        inputUser[key] = value;
-      }
-      
-      // Periksa apakah pengguna dengan nama yang sesuai ada dalam database
-      const user = users.find(u => u.name === inputUser.name);
-      if (user && user.password === inputUser.password) {
-        // Jika SignIn berhasil, arahkan ke halaman Home dengan notifikasi
-        ctx.response.body = render.signInSuccess();
-      } else {
-        ctx.response.body = render.signInFailure();
-      }
+// Handle the sign-in process
+async function signIn(ctx) {
+  const body = ctx.request.body();
+  if (body.type === "form") {
+    const pairs = await body.value;
+    const inputUser = {};
+    for (const [key, value] of pairs) {
+      inputUser[key] = value;
+    }
+    
+    // Check if a user with the matching name exists in the database
+    const user = users.find(u => u.name === inputUser.name);
+    if (user && user.password === inputUser.password) {
+      // If sign-in is successful, display success message
+      ctx.response.body = render.signInSuccess();
+    } else {
+      // If sign-in fails, display failure message
+      ctx.response.body = render.signInFailure();
     }
   }
+}
 
-  console.log('Server is running at http://127.0.0.1:8000');
-  await app.listen({ port: 8000 });
+// Start the application and listen on port 8000
+console.log('Server is running at http://127.0.0.1:8000');
+await app.listen({ port: 8000 });
