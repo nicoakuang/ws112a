@@ -35,7 +35,10 @@ Link below:
 Source: https://github.com/nicoakuang/ws112a/tree/master/Assignment/HW5
 
 #Assignment 6 Success
-
+finish method, All assignments are completed after understanding the teacher's program and modifying the teacher's program into the homework requirements.
+Have trouble when using session then come to teacher when class, and teacher help fix and teach about how using session
+Link below:
+Source: https://github.com/nicoakuang/ws112a/tree/master/Assignment/HW5
 
 #Assignment 7 Success
 
