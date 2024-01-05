@@ -124,3 +124,4 @@ R.savePost = function () {
   send({ type: 'create', post: { title: title, body: body } })
   window.location.hash = '#list'
 }
+//s
