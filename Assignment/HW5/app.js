@@ -35,7 +35,7 @@ function query(sql) {
 
 async function search(ctx) {
   // Render the search form
-  ctx.response.body = await render.search();
+  ctx.response.body = render.search();
 }
 
 async function find(ctx) {

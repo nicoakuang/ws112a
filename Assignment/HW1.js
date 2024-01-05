@@ -17,10 +17,10 @@ app.use((ctx) => {
     ctx.response.body = `
     <html>
     <body>
-      <p>/nqu/ Displays a hyperlink to National Quemoy University</p>
-      <p>/nqu/csie/ Displays a hyperlink to National Quemoy University Department of Computer Science and Information Engineering</p>
+      <p>/nqu/ Displays a hyperlink to National Quemoy University Website</p>
+      <p>/nqu/csie/ Displays a hyperlink to National Quemoy University Department of Computer Science and Information Engineering Website</p>
       <p>/to/nqu/ Redirects to National Quemoy University website</p>
-      <p>/to/nqu/csie/ Redirects to National Quemoy University Department of Computer Science and Information Engineering</p>
+      <p>/to/nqu/csie/ Redirects to National Quemoy University Department of Computer Science and Information Engineering Website</p>
     </body>
     </html>
     `;

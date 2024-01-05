@@ -68,9 +68,9 @@ async function signUp(ctx) {
       const user = users.find(u => u.name === inputUser.name);
       if (user && user.password === inputUser.password) {
         // Jika SignIn berhasil, arahkan ke halaman Home dengan notifikasi
-        ctx.response.body = await render.signInSuccess();
+        ctx.response.body = render.signInSuccess();
       } else {
-        ctx.response.body = await render.signInFailure();
+        ctx.response.body = render.signInFailure();
       }
     }
   }
