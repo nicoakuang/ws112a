@@ -41,8 +41,22 @@ Link below:
 Source: https://github.com/nicoakuang/ws112a/tree/master/Assignment/HW5
 
 #Assignment 7 Success
-
+Have problem when face no more render.js and need to change all to the main.js. Percentage using chatgpt 50%, i also find teacher, and disccuss about this on the class, and after understanding and modifying i finish the WEB 2.0 and i also modifying the WEB 2.0 can have SQ DB
+Success WEB 2.0 + SQ DB
 Link below:
 Source: https://github.com/nicoakuang/ws112a/tree/master/Assignment/HW7
 
 #Assignment 8 Success
+Percentage using chatgpt 50%, i also find teacher, and disccuss about this on the class, and after understanding and modifying i finish the Web 2.5 and i also modifying the WEB 2.5 add search function
+Link below:
+Source: https://github.com/nicoakuang/ws112a/tree/master/Assignment/HW8
+
+#Assignment fail2ban Success
+fail2ban, prevent against brute-force attacks
+Source
+https://en.wikipedia.org/wiki/Fail2ban
+
+[使用fail2ban防止暴力登入攻擊](https://xenby.com/b/107-%e6%95%99%e5%ad%b8-%e4%bd%bf%e7%94%a8fail2ban%e9%98%b2%e6%ad%a2%e6%9a%b4%e5%8a%9b%e7%99%bb%e5%85%a5%e6%94%bb%e6%93%8a)
+Link below:
+Source: https://github.com/nicoakuang/ws112a/tree/master/Assignment/HW8
+
