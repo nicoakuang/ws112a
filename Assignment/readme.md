@@ -25,3 +25,19 @@ Link below:
 Source: https://github.com/nicoakuang/ws112a/blob/master/Assignment/HW3
 
 #Assignment 4 Success
+finish method, All assignments are completed after understanding the teacher's program and modifying the teacher's program into the homework requirements.
+Link below:
+Source: https://github.com/nicoakuang/ws112a/blob/master/Assignment/HW4
+
+#Assignment 5 Success
+finish method, All assignments are completed after understanding the teacher's program and modifying the teacher's program into the homework requirements.
+Link below:
+Source: https://github.com/nicoakuang/ws112a/tree/master/Assignment/HW5
+
+#Assignment 6 Success
+
+
+#Assignment 7 Success
+
+
+#Assignment 8 Success
