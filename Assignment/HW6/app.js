@@ -8,7 +8,7 @@ import { Session } from "https://deno.land/x/oak_sessions/mod.ts";
 import { RateLimiter } from "https://deno.land/x/oak_rate_limit/mod.ts";
 import { MapStore } from "https://deno.land/x/oak_rate_limit/mod.ts";
 
-// Create a database instance and define tables if they don't exist
+// Create a database instance and define tables if they dont exist
 const db = new DB("blog.db");
 db.query("CREATE TABLE IF NOT EXISTS posts (id INTEGER PRIMARY KEY AUTOINCREMENT, username TEXT, title TEXT, body TEXT)");
 db.query("CREATE TABLE IF NOT EXISTS users (id INTEGER PRIMARY KEY AUTOINCREMENT, username TEXT, password TEXT, email TEXT)");
