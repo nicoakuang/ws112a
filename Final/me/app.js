@@ -12,13 +12,17 @@ db.query("CREATE TABLE IF NOT EXISTS posts (id INTEGER PRIMARY KEY AUTOINCREMENT
 db.query("CREATE TABLE IF NOT EXISTS users (id INTEGER PRIMARY KEY AUTOINCREMENT, username TEXT, password TEXT, email TEXT)");
 
 const rateLimit = RateLimiter({
-  store: new MapStore, // Using MapStore by default.
-  windowMs: 5000, // Window for the requests that can be made in milliseconds.
-  max: 500, // Max requests within the predefined window.
-  headers: true, // Default true, it will add the headers X-RateLimit-Limit, X-RateLimit-Remaining.
-  message: "Too many requests, please try again later.", // Default message if rate limit reached.
-  statusCode: 429, // Default status code if rate limit reached.
-});
+    store: new MapStore(), // Using MapStore by default.
+    windowMs: 50000, // Window for the requests that can be made in milliseconds.
+    max: 5000, // Max requests within the predefined window.
+    headers: true, // Default true, it will add the headers X-RateLimit-Limit, X-RateLimit-Remaining.
+    message: "Too many requests, please try again later.", // Default message if rate limit reached.
+    statusCode: 429, // Default status code if rate limit reached.
+  })
+
+  // Use the rate limit middleware and session middleware
+  app.use(await rateLimit);
+  app.use(Session.initMiddleware());
 
 // Create an instance of the Oak router
 const router = new Router();
@@ -33,17 +37,12 @@ router
   .get('/logout', logout)   // Route to handle logout
   .get('/post/new', add)    // Route to display new post form
   .get('/post/:id', show)   // Route to display a specific post
-  .post('/post', create)  // Route to handle post creation
-  .get("/search/search", search)  // Route for displaying search form
-  .post("/search", find);  // Route for handling search
-  //.get('/contact/delete/:id', deleteConfirmation)
-  //.post('/contact/delete/:id', deleteContact);
+  .post('/post', create);   // Route to handle post creation
 
 // Create an instance of the Oak application
 const app = new Application()
-
-app.use(Session.initMiddleware()) 
-app.use(await rateLimit); 
+app.use(await rateLimit);
+app.use(Session.initMiddleware()) // Initialize session middleware
 app.use(router.routes());          // Use the defined routes
 app.use(router.allowedMethods());  // Use allowed methods
 
@@ -75,49 +74,11 @@ function postQuery(sql) {
   return list
 }
 
-async function search(ctx) {
-  // Render the search form
-  ctx.response.body = render.search();
-}
-
-async function find(ctx) {
-  const body = ctx.request.body();
-  if (body.type === "form") {
-    const pairs = await body.value;
-    let name;
-
-    // Extract the value of the "title" field from the form
-    for (let pair of pairs) {
-      if (pair[0] === "title") {
-        name = pair[1];
-        break;
-      }
-    }
-
-    if (name) {
-      // Perform a case-insensitive search for posts containing the specified name
-      const posts = postQuery(`SELECT id, username, title, body FROM posts WHERE title LIKE '%${name}%'`);
-
-      if (posts.length > 0) {
-        const foundPost = posts[0];
-        // Render the result of the search
-        ctx.response.body = render.found(foundPost.title, foundPost.body);
-      } else {
-        // Render not found if there are no matching posts
-        ctx.response.body = render.not_found();
-      }
-    } else {
-      // Render not found if the "name" field is empty
-      ctx.response.body = render.not_found();
-    }
-  }
-}
-
 // Function to query users from the database
 function userQuery(sql) {
   let list = []
-  for (const [id, username, password, email] of sqlcmd(sql)) {
-    list.push({id, username, password, email})
+  for (const [id, username, password] of sqlcmd(sql)) {
+    list.push({id, username, password})
   }
   console.log('userQuery: list=', list)
   return list
@@ -142,20 +103,21 @@ async function signup(ctx) {
   const body = ctx.request.body();
   const user = await parseFormBody(body);
 
-  if (!user.username || !user.password || !user.email) {
+  if (!user.username || !user.password) {
     ctx.response.body = render.fail("Please fill in all the fields.");
     return;
   }
 
   if (body.type === "form") {
-    const dbUsers = userQuery(`SELECT id, username, password, email FROM users WHERE username='${user.username}'`);
-
+    const user = await parseFormBody(body);
+    // Check if the username already exists in the database
+    var dbUsers = userQuery(`SELECT id, username, password FROM users WHERE username='${user.username}'`);
     if (dbUsers.length === 0) {
-      sqlcmd("INSERT INTO users (username, password, email) VALUES (?, ?, ?)", [user.username, user.password, user.email]);
+      // If the username doesn't exist, insert the new user into the database
+      sqlcmd("INSERT INTO users (username, password) VALUES (?, ?)", [user.username, user.password]);
       ctx.response.body = render.success();
-    } else {
+    } else 
       ctx.response.body = render.fail();
-    }
   }
 }
 
@@ -167,13 +129,12 @@ async function login(ctx) {
   const body = ctx.request.body();
   if (body.type === "form") {
     const user = await parseFormBody(body);
-    const dbUsers = userQuery(`SELECT id, username, password, email FROM users WHERE username='${user.username}'`);
-    const dbUser = dbUsers[0];
+    const dbUsers = userQuery(`SELECT id, username, password FROM users WHERE username='${user.username}'`)
 
     // Periksa kegagalan login dalam sesi
     let userSession = (await ctx.state.session.get('user')) || { loginAttempts: 0 };
 
-    if (dbUser && dbUser.password === user.password) {
+    if (dbUser.password === user.password) {
       // Reset jumlah kegagalan login jika berhasil login
       userSession.loginAttempts = 0;
       ctx.state.session.set('user', user);
@@ -225,7 +186,7 @@ async function add(ctx) {
  // Check if the user is logged in
  if (user != null) {
    // Render the new post form
-   ctx.response.body = await render.newPost();
+   ctx.response.body = render.newPost();
  } else {
    // Render a failure message if the user is not logged in
    ctx.response.body = render.fail();

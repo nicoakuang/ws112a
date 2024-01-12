@@ -84,6 +84,9 @@ async function signupUi(ctx) {
 
 async function signup(ctx) {
   const body = ctx.request.body()
+
+
+  
   if (body.type === "form") {
     var user = await parseFormBody(body)
     var dbUsers = userQuery(`SELECT id, username, password, email FROM users WHERE username='${user.username}'`)

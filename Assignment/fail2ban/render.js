@@ -4,55 +4,81 @@ export function layout(title, content) {
   <head>
     <title>${title}</title>
     <style>
-      body {
-        padding: 80px;
-        font: 16px Helvetica, Arial;
-      }
-  
-      h1 {
-        font-size: 2em;
-      }
-  
-      h2 {
-        font-size: 1.2em;
-      }
-  
-      #posts {
-        margin: 0;
-        padding: 0;
-      }
-  
-      #posts li {
-        margin: 40px 0;
-        padding: 0;
-        padding-bottom: 20px;
-        border-bottom: 1px solid #eee;
-        list-style: none;
-      }
-  
-      #posts li:last-child {
-        border-bottom: none;
-      }
-  
-      textarea {
-        width: 500px;
-        height: 300px;
-      }
-  
-      input[type=text],input[type=password],
-      textarea {
-        border: 1px solid #eee;
-        border-top-color: #ddd;
-        border-left-color: #ddd;
-        border-radius: 2px;
-        padding: 15px;
-        font-size: .8em;
-      }
-  
-      input[type=text],input[type=password] {
-        width: 500px;
-      }
-    </style>
+    body {
+      padding: 80px;
+      font: 16px Helvetica, Arial;
+    }
+
+    h1 {
+      font-size: 2em;
+    }
+
+    h2 {
+      font-size: 1.2em;
+    }
+
+    #posts {
+      margin: 0;
+      padding: 0;
+    }
+
+    #posts li {
+      margin: 40px 0;
+      padding: 0;
+      padding-bottom: 20px;
+      border-bottom: 1px solid #eee;
+      list-style: none;
+    }
+
+    #posts li:last-child {
+      border-bottom: none;
+    }
+
+    textarea {
+      width: 500px;
+      height: 300px;
+    }
+
+    input[type=text],
+    input[type=password],
+    textarea {
+      border: 1px solid #eee;
+      border-top-color: #ddd;
+      border-left-color: #ddd;
+      border-radius: 2px;
+      padding: 15px;
+      font-size: .8em;
+      margin-bottom: 10px; /* Added margin between input elements */
+    }
+
+    input[type=text],
+    input[type=password] {
+      width: 500px;
+    }
+
+    input[type=submit] {
+      background-color: #4CAF50;
+      color: white;
+      padding: 15px 20px;
+      border: none;
+      border-radius: 3px;
+      cursor: pointer;
+      font-size: 1em;
+    }
+
+    input[type=submit]:hover {
+      background-color: #45a049;
+    }
+
+    a {
+      color: #007BFF;
+      text-decoration: none;
+    }
+
+    a:hover {
+      text-decoration: underline;
+    }
+    </style
   </head>
   <body>
     <section id="content">
@@ -114,14 +140,18 @@ export function list(posts, user) {
     `)
   }
   let content = `
-  <h1>Posts</h1>
-  <p>${(user==null)?'<a href="/login">Login</a> to Create a Post!':'Welcome '+user.username+', You may <a href="/post/new">Create a Post</a> or <a href="/logout">Logout</a> !'}</p>
-  <p>There are <strong>${posts.length}</strong> posts!</p>
-  <ul id="posts">
-    ${list.join('\n')}
-  </ul>
-  `
-  return layout('Posts', content)
+    <h1>Posts</h1>
+    ${(user == null) ? '<p><a href="/login">Login</a> to Create a Post!</p>' :
+      `<p>Welcome ${user.username}, You may <a href="/post/new">Create a Post</a> or <a href="/logout">Logout</a>!</p>`}
+    <p>You have <strong>${posts.length}</strong> posts!</p>
+    ${(user != null) ? '<p><a href="/post/new">Create a Post</a></p>' : ''}
+    <p><a href="/search/search">Search post</a></p>
+    <ul id="posts">
+      ${list.join('\n')}
+    </ul>
+  `;
+
+  return layout('Posts', content);
 }
 
 export function newPost() {
@@ -136,9 +166,51 @@ export function newPost() {
   `)
 }
 
+export function search() {
+  return layout(
+    "Search Posts",
+    `
+    <h1>Search post</h1>
+    <form action="/search" method="post">
+      <p><input type="text" placeholder="Post to search" name="title"></p>
+      <p><input type="submit" value="Search"></p>
+    </form>
+    `
+  );
+}
+
+export function not_found() {
+  return layout(
+    "Post Not Found",
+    `
+    <h1>Post Not Found</h1>
+    <form action="/search" method="post">
+      <p><input type="text" placeholder="Title to search" name="title"></p>
+      <p><input type="submit" value="Search"></p>
+    </form>
+    <h1>Not Found</h1>
+    `
+  );
+}
+
 export function show(post) {
   return layout(post.title, `
     <h1>${post.title} -- by ${post.username}</h1>
     <p>${post.body}</p>
   `)
+}
+
+export function found(newPost, postMessage) {
+  return layout(
+    "Post Found",
+    `
+    <h1>Post Found</h1>
+    <form action="/search" method="post">
+      <p><input type="text" placeholder="post to search" name="title"></p>
+      <p><input type="submit" value="Search"></p>
+    </form>
+    <h1>Title: ${newPost}</h1>
+    <p>Content: ${postMessage}</p>
+    `
+  );
 }

@@ -101,7 +101,7 @@ export function layout(title, content, user) {
             transform: scale(1.05);
           }
         </style>
-      </head>
+      </head>   
       <body>
         <header>
           <div>
