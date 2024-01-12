@@ -4,89 +4,121 @@ export function layout(title, content) {
   <head>
     <title>${title}</title>
     <style>
-    body {
-      padding: 80px;
-      font: 16px Helvetica, Arial;
-    }
+      body {
+        margin: 0;
+        padding: 0;
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        background: url("https://marketplace.canva.com/EAFKADKjVWE/1/0/1600w/canva-light-pink-simple-stay-focused-desktop-wallpaper-ORk-wLelqBg.jpg") center/cover fixed no-repeat;
+        color: #ffffff;
+        overflow-x: hidden;
+        padding: 80px;
+      }
 
-    h1 {
-      font-size: 2em;
-    }
+      h1 {
+        font-size: 3em;
+        margin-bottom: 20px;
+      }
 
-    h2 {
-      font-size: 1.2em;
-    }
+      h2 {
+        font-size: 1.5em;
+        margin-bottom: 15px;
+      }
 
-    #posts {
-      margin: 0;
-      padding: 0;
-    }
+      #posts {
+        margin: 0;
+        padding: 0;
+      }
 
-    #posts li {
-      margin: 40px 0;
-      padding: 0;
-      padding-bottom: 20px;
-      border-bottom: 1px solid #eee;
-      list-style: none;
-    }
+      #posts li {
+        margin: 40px 0;
+        padding: 0;
+        padding-bottom: 20px;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.5);
+        list-style: none;
+        background: rgba(0, 0, 0, 0.3);
+        border-radius: 10px;
+        padding: 20px;
+      }
 
-    #posts li:last-child {
-      border-bottom: none;
-    }
+      #posts li:last-child {
+        border-bottom: none;
+      }
 
-    textarea {
-      width: 500px;
-      height: 300px;
-    }
+      textarea {
+        width: 500px;
+        height: 300px;
+        border: 1px solid rgba(255, 255, 255, 0.5);
+        border-radius: 5px;
+        padding: 10px;
+        margin-bottom: 10px;
+        color: #ffffff;
+        background: rgba(0, 0, 0, 0.5);
+      }
 
-    input[type=text],
-    input[type=password],
-    textarea {
-      border: 1px solid #eee;
-      border-top-color: #ddd;
-      border-left-color: #ddd;
-      border-radius: 2px;
-      padding: 15px;
-      font-size: .8em;
-      margin-bottom: 10px; /* Added margin between input elements */
-    }
+      input[type=text],
+      input[type=password],
+      textarea {
+        border: 1px solid rgba(255, 255, 255, 0.5);
+        border-radius: 5px;
+        padding: 15px;
+        font-size: 1em;
+        margin-bottom: 10px;
+        color: #ffffff;
+        background: rgba(0, 0, 0, 0.5);
+      }
 
-    input[type=text],
-    input[type=password] {
-      width: 500px;
-    }
+      input[type=text],
+      input[type=password] {
+        width: 100%;
+      }
 
-    input[type=submit] {
-      background-color: #4CAF50;
-      color: white;
-      padding: 15px 20px;
-      border: none;
-      border-radius: 3px;
-      cursor: pointer;
-      font-size: 1em;
-    }
+      input[type=submit] {
+        background-color: #4CAF50;
+        color: white;
+        padding: 15px 20px;
+        border: none;
+        border-radius: 3px;
+        cursor: pointer;
+        font-size: 1.2em;
+        font-weight: bold;
+      }
 
-    input[type=submit]:hover {
-      background-color: #45a049;
-    }
+      input[type=submit]:hover {
+        background-color: #45a049;
+      }
 
-    a {
-      color: #007BFF;
-      text-decoration: none;
-    }
+      a {
+        color: #007BFF;
+        text-decoration: none;
+        font-weight: bold;
+      }
 
-    a:hover {
-      text-decoration: underline;
-    }
-    </style
+      a:hover {
+        text-decoration: underline;
+      }
+
+      /* Style untuk footer */
+      footer {
+        background-color: #333;
+        color: #fff;
+        padding: 20px;
+        text-align: center;
+        font-size: 1.2em;
+      }
+    </style>
   </head>
   <body>
     <section id="content">
       ${content}
     </section>
+
+    <!-- Footer section -->
+    <footer>
+      <p>Project by 鄭石光</p>
+    </footer>
   </body>
   </html>
-  `
+  `;
 }
 
 export function loginUi() {
